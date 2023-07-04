@@ -1,0 +1,12 @@
+.form{
+    margin: 20px;
+width: fit-content;
+}
+.form button{
+    width: 40px;
+    height: 40px;
+}
+input{
+    padding: 5px;
+    height: 40px;
+}

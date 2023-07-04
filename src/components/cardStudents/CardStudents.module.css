@@ -1,0 +1,41 @@
+.wrapp {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    padding: 10px;
+    text-align: start;
+    font-size: 20px;
+}
+.wrapp_size{
+    display: flex;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    background: #f0eeee;
+    max-width: 400px;
+    flex-wrap: wrap;
+
+}
+.crossDellete{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.container_1 {
+    display: flex;
+    flex-direction: row;
+}
+.container_2{
+    display: flex;
+    gap:10px;
+}
+.sms{
+    word-break: break-word;
+
+}
+img {
+    width: 100px;
+    padding: 5px;
+    border-radius: 50%;
+}
