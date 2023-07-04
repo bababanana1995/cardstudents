@@ -16,6 +16,8 @@ type PropsType = {
     addComments: (smsText: string, cardId: string) => void
     commentChangeLikes:(comId:string,check:boolean,cardId:string)=>void
     changeCardTitle:(cardId:string,nameStudents:string)=>void
+    removeCard:(cardId:string)=>void
+    changeCommentsText:(cardId:string,comId:string,text:string)=>void
 }
 
 export function CardStudents(props: PropsType) {
@@ -27,7 +29,9 @@ export function CardStudents(props: PropsType) {
         removeComments,
         addComments,
         commentChangeLikes,
-        changeCardTitle
+        changeCardTitle,
+        removeCard,
+        changeCommentsText
     } = props
     const [comment, setComment]=useState('')
     const removeCommentsHandler = (id: string) => {
@@ -37,8 +41,8 @@ export function CardStudents(props: PropsType) {
         addComments(comment,cardId)
         setComment('')
     }
-    const changeCommentHandler=(sms:string)=>{
-        setComment(sms)
+    const changeCommentHandler=(commentId:string)=>{
+        changeCommentsText(cardId,commentId,comment)
     }
     const commentChangeLikesHandler=(check:boolean,id:string)=>{
         commentChangeLikes(id,check,cardId)
@@ -46,18 +50,23 @@ export function CardStudents(props: PropsType) {
     const changeTitleHandler=(title:string)=>{
         changeCardTitle(cardId,title)
     }
+    const removeCardHandler=()=>{
+        console.log(cardId)
+        removeCard(cardId)
+    }
     const mapSms = comments[cardId].map((el, key) =>
         <div className={s.container_2} key={key}>
             <input onChange={(e)=>commentChangeLikesHandler(e.currentTarget.checked,el.id)}  checked={el.likes} type="checkbox"/>
             <div>
                 <button className={s.crossDellete} onClick={() => removeCommentsHandler(el.id)}>x</button>
             </div>
-            <EditableMode className={s.sms} text={el.sms} onChange={changeCommentHandler}/>
+            <EditableMode className={s.sms} text={el.sms} onChange={()=>changeCommentHandler(el.id)}/>
             {/*<span className={s.sms}>{el.sms}</span>*/}
         </div>
     )
     return (
         <div className={s.wrapp}>
+                        <button onClick={removeCardHandler}>x</button>
             <div className={s.wrapp_size}>
                 <div className={s.container_1}>
                     <div>
