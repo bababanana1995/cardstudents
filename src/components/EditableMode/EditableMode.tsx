@@ -10,21 +10,22 @@ type EditableModePropsType = {
 export const EditableMode = (props: EditableModePropsType) => {
     const {text,onChange,className} = props
     const [editMode, setEditMode] = useState(false)
-    const [name, setName] = useState(text)
+    const [textEdit, setTextEdit] = useState(text)
 
     const addText=(e:ChangeEvent<HTMLInputElement>)=>{
-        setName(e.currentTarget.value)
+        setTextEdit(e.currentTarget.value)
     }
     const openEditMode=()=>{
+        setTextEdit(text)
         setEditMode(!editMode)
     }
     const Blur=()=>{
-        onChange(name)
+        onChange(textEdit)
         setEditMode(!editMode)
     }
     const pressEnter=(e:React.KeyboardEvent<HTMLInputElement>)=>{
         if(e.charCode===13){
-            onChange(name)
+            onChange(textEdit)
             setEditMode(!editMode)
         }
     }
@@ -34,11 +35,11 @@ export const EditableMode = (props: EditableModePropsType) => {
             ?
             <>
                 <button className='Editablebutton' onClick={openEditMode}>-</button>
-                <span>{name}</span>
+                <span>{text}</span>
             </>
 :
             <>
-                <input className={s.input} onKeyPress={pressEnter} onBlur={Blur} value={name} autoFocus onChange={addText} type="text"/>
+                <input className={s.input} onKeyPress={pressEnter} onBlur={Blur} value={textEdit} autoFocus onChange={addText} type="text"/>
             </>
 
     )

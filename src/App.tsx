@@ -4,8 +4,13 @@ import {CardStudents} from './components/cardStudents/cardStudents';
 import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm/AddItemForm";
 import {EditableMode} from "./components/EditableMode/EditableMode";
-import {addCardAC, cardReducer, removeCardAC } from './components/state/card-reducer';
-import { commentsReducer } from './components/state/comments-reducer';
+import {addCardAC, cardReducer, changeCardTitleAC, removeCardAC} from './components/state/card-reducer';
+import {
+    addCommentsAC, changeCommentsTextAC,
+    commentChangeLikesAC,
+    commentsReducer,
+    removeCommentsAC
+} from './components/state/comments-reducer';
 
 
 export type CardStudentsType = {
@@ -57,34 +62,29 @@ function App() {
     })
     const removeComments = (comId: string, cardId: string) => {
         // setComments({...comments, [cardId]: comments[cardId].filter(el => el.id !== comId)})
-        
+        dispatchComments(removeCommentsAC(comId,cardId))
     }
     const addComments = (smsText: string, cardId: string) => {
-        let com = {id: v1(), sms: smsText, likes: true}
-        // setComments({...comments, [cardId]: [...comments[cardId], com]})
+        dispatchComments(addCommentsAC(smsText,cardId))
     }
     const commentChangeLikes = (comId: string, check: boolean, cardId: string) => {
-        // setComments({
-        //     ...comments,
-        //     [cardId]: comments[cardId].map(el => el.id === comId ? {...el, likes: check} : el)
-        // })
+        dispatchComments(commentChangeLikesAC(comId, check, cardId))
     }
     const changeCommentsText=(cardId:string,comId:string,text:string)=>{
-        // setComments({...comments,[cardId]: comments[cardId].map(el => el.id === comId ? {...el, sms: text} : el)})
+        dispatchComments(changeCommentsTextAC(cardId,comId,text))
     }
     const addCard = (name: string) => {
-        // const cardId = v1()
-        // let newCard = {id: cardId, avatar: avatar1, name: name}
-        dispatchCardStudents(addCardAC(name))
+        const action = addCardAC(name)
+        dispatchCardStudents(action)
+        dispatchComments(action)
     }
     const removeCard = (cardId: string) => {
-        // let newCard = cardStudents.filter(el => el.id !== cardId)
-        // delete comments[cardId]
-        // setCardStudents(newCard)
-        dispatchCardStudents(removeCardAC(cardId))
+        const action = removeCardAC(cardId)
+        dispatchCardStudents(action)
+        dispatchComments(action)
     }
     const changeCardTitle = (cardId: string, nameStudents: string) => {
-        return cardStudents.map(el => el.id === cardId ? {...el, name: nameStudents} : el)
+        return dispatchCardStudents(changeCardTitleAC(cardId,nameStudents))
     }
     const mapTodolist = cardStudents.map(el => {
         return <CardStudents

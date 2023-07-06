@@ -22,11 +22,11 @@ export const cardReducer = (state = initialState, action: ActionCardType): CardS
     }
 }
 
-type RemoveCardActionType = {
+export type RemoveCardActionType = {
     type: 'REMOVE-CARD'
     cardId: string
 }
-type AddCardActiomType = {
+export type AddCardActiomType = {
     type:'ADD-CARD'
     name:string
     cardId:string

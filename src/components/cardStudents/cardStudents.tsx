@@ -4,8 +4,6 @@ import {CardStudentsType, CommentsStateType} from "../../App";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableMode} from "../EditableMode/EditableMode";
 
-type TaskType = {}
-
 type PropsType = {
     cardStudents: CardStudentsType[]
     comments: CommentsStateType
@@ -33,36 +31,39 @@ export function CardStudents(props: PropsType) {
         removeCard,
         changeCommentsText
     } = props
-    const [comment, setComment]=useState('')
-    const removeCommentsHandler = (id: string) => {
-        removeComments(id, cardId)
-    }
+    // const [comment, setComment]=useState('')
+
     const addCommentsHandler=(comment:string)=>{
         addComments(comment,cardId)
-        setComment('')
     }
-    const changeCommentHandler=(commentId:string)=>{
-        changeCommentsText(cardId,commentId,comment)
-    }
-    const commentChangeLikesHandler=(check:boolean,id:string)=>{
-        commentChangeLikes(id,check,cardId)
-    }
-    const changeTitleHandler=(title:string)=>{
-        changeCardTitle(cardId,title)
+
+
+    const changeCardTitleHandler=(name:string)=>{
+        changeCardTitle(cardId,name)
     }
     const removeCardHandler=()=>{
-        console.log(cardId)
         removeCard(cardId)
     }
-    const mapSms = comments[cardId].map((el, key) =>
-        <div className={s.container_2} key={key}>
-            <input onChange={(e)=>commentChangeLikesHandler(e.currentTarget.checked,el.id)}  checked={el.likes} type="checkbox"/>
-            <div>
-                <button className={s.crossDellete} onClick={() => removeCommentsHandler(el.id)}>x</button>
+    const mapSms = comments[cardId].map((el, key) => {
+        const changeCommentHandler=(comment:string)=>{
+            changeCommentsText(cardId,el.id,comment)
+        }
+        const commentChangeLikesHandler=(check:boolean)=>{
+            commentChangeLikes(el.id,check,cardId)
+        }
+        const removeCommentsHandler = () => {
+            removeComments(el.id, cardId)
+        }
+           return <div className={s.container_2} key={key}>
+                <input onChange={(e) => commentChangeLikesHandler(e.currentTarget.checked)} checked={el.likes}
+                       type="checkbox"/>
+                <div>
+                    <button className={s.crossDellete} onClick={removeCommentsHandler}>x</button>
+                </div>
+                <EditableMode className={s.sms} text={el.sms} onChange={changeCommentHandler}/>
+                {/*<span className={s.sms}>{el.sms}</span>*/}
             </div>
-            <EditableMode className={s.sms} text={el.sms} onChange={()=>changeCommentHandler(el.id)}/>
-            {/*<span className={s.sms}>{el.sms}</span>*/}
-        </div>
+        }
     )
     return (
         <div className={s.wrapp}>
@@ -74,7 +75,7 @@ export function CardStudents(props: PropsType) {
                     </div>
                     <div>
                         <h2>
-                            <EditableMode text={name} onChange={changeTitleHandler} className=''/>
+                            <EditableMode text={name} onChange={changeCardTitleHandler} className=''/>
                         </h2>
                         <div>
                             <AddItemForm addText={addCommentsHandler} name={'add'} textPlaceholder={'Write your message'}/>
