@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import s from './CardStudents.module.css'
 import {CommentsType} from "../../App";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
@@ -7,6 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {addCommentsAC, changeCommentsTextAC, commentChangeLikesAC, removeCommentsAC} from "../state/comments-reducer";
 import {changeCardTitleAC, removeCardAC} from "../state/card-reducer";
+import {Simulate} from "react-dom/test-utils";
+import compositionEnd = Simulate.compositionEnd;
 
 type PropsType = {
     cardId: string
@@ -14,7 +16,8 @@ type PropsType = {
     avatar: string
 }
 
-export function CardStudents(props: PropsType) {
+export const CardStudents = React.memo((props: PropsType) => {
+    console.log('CardStudents')
     const {
         cardId,
         name,
@@ -22,17 +25,29 @@ export function CardStudents(props: PropsType) {
     } = props
     let comments = useSelector<AppRootStateType, CommentsType[]>(state => state.comments[cardId])
     let dispatch = useDispatch()
+    const [likes, setLikes] = useState('all')
 
-    const addComments = (comment: string) => {
+    const addComments = useCallback((comment: string) => {
         dispatch(addCommentsAC(cardId, comment))
-    }
+    }, [dispatch])
     const changeCardTitle = (name: string) => {
         dispatch(changeCardTitleAC(cardId, name))
     }
     const removeCard = () => {
         dispatch(removeCardAC(cardId))
     }
-    const mapSms = comments.map((el, key) => {
+
+    const filteredComments = (likes: string) => {
+        setLikes(likes)
+    }
+    let allComments = comments
+    if (likes === 'check') {
+        allComments = comments.filter(el => el.likes === true)
+    }
+    if (likes === 'notCheck') {
+        allComments = comments.filter(el => el.likes === false)
+    }
+    const mapSms = allComments.map((el, key) => {
             const changeComment = (comment: string) => {
                 dispatch(changeCommentsTextAC(cardId, el.id, comment))
             }
@@ -42,6 +57,7 @@ export function CardStudents(props: PropsType) {
             const removeComments = () => {
                 dispatch(removeCommentsAC(el.id, cardId))
             }
+
             return <div className={s.container_2} key={key}>
                 <input onChange={(e) => commentChangeLikes(e.currentTarget.checked)} checked={el.likes}
                        type="checkbox"/>
@@ -52,6 +68,8 @@ export function CardStudents(props: PropsType) {
             </div>
         }
     )
+
+
     return (
         <div className={s.wrapp}>
             <button onClick={removeCard}>x</button>
@@ -75,6 +93,11 @@ export function CardStudents(props: PropsType) {
                     </ol>
                 </div>
             </div>
+            <div>
+                <button onClick={() => filteredComments('all')}>all</button>
+                <button onClick={() => filteredComments('check')}>check</button>
+                <button onClick={() => filteredComments('notCheck')}>notCheck</button>
+            </div>
         </div>
     )
-}
+})

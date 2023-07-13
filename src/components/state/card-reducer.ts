@@ -2,9 +2,11 @@ import { v1 } from "uuid"
 import {avatar1, CardStudentsType} from "../../App"
 
 
-export type ActionCardType = RemoveCardActionType|AddCardActiomType|ChangeCardTitleActionType
+export type ActionCardType = RemoveCardActionType|AddCardActionType|ChangeCardTitleActionType
 
-let initialState: CardStudentsType[] = []
+let initialState: CardStudentsType[] = [
+    {id: '123', avatar: 'hello', name: 'Danil'},
+]
 export const cardReducer = (state = initialState, action: ActionCardType): CardStudentsType[] => {
     switch (action.type) {
         case "REMOVE-CARD": {
@@ -22,27 +24,17 @@ export const cardReducer = (state = initialState, action: ActionCardType): CardS
     }
 }
 
-export type RemoveCardActionType = {
-    type: 'REMOVE-CARD'
-    cardId: string
-}
-export type AddCardActiomType = {
-    type:'ADD-CARD'
-    name:string
-    cardId:string
-}
-type ChangeCardTitleActionType ={
-    type: 'CHANGE-CARD-TITLE'
-    cardId:string
-    nameStudents: string
-}
-export const addCardAC=(name:string):AddCardActiomType=>{
+export type RemoveCardActionType = ReturnType<typeof removeCardAC>
+export type AddCardActionType = ReturnType<typeof addCardAC>
+export type ChangeCardTitleActionType =ReturnType<typeof changeCardTitleAC>
+export const addCardAC=(name:string)=>{
 
-    return{type:'ADD-CARD',name,cardId:v1()}
+    return{type:'ADD-CARD',name,cardId:v1()}as const
 }
-export const removeCardAC = (cardId: string):RemoveCardActionType => {
-    return {type: 'REMOVE-CARD', cardId}
+export const removeCardAC = (cardId: string) => {
+    return {type: 'REMOVE-CARD', cardId}as const
 }
-export const changeCardTitleAC = (cardId: string, nameStudents: string):ChangeCardTitleActionType=>{
-    return {type:"CHANGE-CARD-TITLE",cardId,nameStudents}
+export const changeCardTitleAC = (cardId: string, nameStudents: string)=>{
+    return {type:"CHANGE-CARD-TITLE",cardId,nameStudents}as const
 }
+

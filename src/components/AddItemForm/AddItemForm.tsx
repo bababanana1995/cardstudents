@@ -6,7 +6,7 @@ type AddItemFormPropsType = {
     name: string
     textPlaceholder: string
 }
-export const AddItemForm = (props: AddItemFormPropsType) => {
+export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
     const {addText, name, textPlaceholder} = props
     const [text, setText] = useState('')
     const[error,setError] = useState(null||'')
@@ -44,4 +44,4 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
             <div>{error}</div>
         </div>
     )
-}
+})

@@ -1,23 +1,30 @@
 import {CommentsStateType} from "../../App"
 import {v1} from "uuid";
-import {AddCardActiomType, RemoveCardActionType} from "./card-reducer";
+import {AddCardActionType, RemoveCardActionType} from "./card-reducer";
 
 
 export type CommentsReducerActionType = RemoveCommentsActionType |
     AddCommentsActionType |
     CommentChangeLikesActionType |
-    AddCardActiomType |
+    AddCardActionType |
     RemoveCardActionType |
     ChangeCommentsTextActionType
 
-let initialState: CommentsStateType = {}
+let initialState: CommentsStateType = {
+    ['123']:[
+        {id: v1(), sms: 'hello', likes: false},
+        {id: v1(), sms: 'hello', likes: true},
+        {id: v1(), sms: 'hello', likes: false},
+        {id: v1(), sms: 'hello', likes: true},
+    ],
+}
 export const commentsReducer = (state = initialState, action: CommentsReducerActionType): CommentsStateType => {
     switch (action.type) {
         case "REMOVE-COMMENTS":{
             return {...state, [action.cardId]:state[action.cardId].filter(el=>el.id!==action.comId)}
         }
         case "ADD-COMMENTS":{
-            return{...state, [action.cardId]: [...state[action.cardId],{id: v1(), sms: action.smsText, likes: true}]}
+            return{...state, [action.cardId]: [...state[action.cardId],{id: v1(), sms: action.smsText, likes: false}]}
         }
         case "CHANGE-LIKE-COMMENTS":{
             return{...state,[action.cardId]:state[action.cardId].map(el=>el.id===action.comId?{...el,likes:action.check}:el)}
@@ -39,38 +46,20 @@ export const commentsReducer = (state = initialState, action: CommentsReducerAct
             return state
     }
 }
-export type RemoveCommentsActionType = {
-    type: 'REMOVE-COMMENTS'
-    comId: string
-    cardId: string
+export type RemoveCommentsActionType = ReturnType<typeof removeCommentsAC>
+export type AddCommentsActionType = ReturnType<typeof addCommentsAC>
+export type CommentChangeLikesActionType = ReturnType<typeof commentChangeLikesAC>
+export type ChangeCommentsTextActionType = ReturnType<typeof changeCommentsTextAC>
+export const removeCommentsAC = (comId: string, cardId: string) => {
+    return {type: 'REMOVE-COMMENTS', comId, cardId}as const
 }
-export type AddCommentsActionType = {
-    type: 'ADD-COMMENTS'
-    smsText: string
-    cardId: string
+export const addCommentsAC = (cardId: string,smsText: string) => {
+    return {type: 'ADD-COMMENTS', smsText, cardId}as const
 }
-export type CommentChangeLikesActionType = {
-    type: 'CHANGE-LIKE-COMMENTS'
-    comId: string
-    check: boolean
-    cardId: string
+export const commentChangeLikesAC = (comId: string, check: boolean, cardId: string) => {
+    return {type: 'CHANGE-LIKE-COMMENTS', comId, check, cardId}as const
 }
-export type ChangeCommentsTextActionType = {
-    type: 'CHANGE-COMMENTS-TITLE'
-    cardId:string
-    comId:string
-    text:string
-}
-export const removeCommentsAC = (comId: string, cardId: string):RemoveCommentsActionType => {
-    return {type: 'REMOVE-COMMENTS', comId, cardId}
-}
-export const addCommentsAC = (cardId: string,smsText: string):AddCommentsActionType => {
-    return {type: 'ADD-COMMENTS', smsText, cardId}
-}
-export const commentChangeLikesAC = (comId: string, check: boolean, cardId: string):CommentChangeLikesActionType => {
-    return {type: 'CHANGE-LIKE-COMMENTS', comId, check, cardId}
-}
-export const changeCommentsTextAC = (cardId:string,comId:string,text:string):ChangeCommentsTextActionType=>{
-    return {type:'CHANGE-COMMENTS-TITLE',cardId,comId,text }
+export const changeCommentsTextAC = (cardId:string,comId:string,text:string)=>{
+    return {type:'CHANGE-COMMENTS-TITLE',cardId,comId,text }as const
 }
 

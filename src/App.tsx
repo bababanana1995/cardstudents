@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import './App.css';
 import {CardStudents} from './components/cardStudents/cardStudents';
 import {AddItemForm} from "./components/AddItemForm/AddItemForm";
@@ -22,13 +22,14 @@ export type CommentsStateType = {
 }
 export let avatar1 = 'https://pm1.aminoapps.com/6889/74979d4d2744ec6e27995b6e866f091d04c0b40cr1-515-414v2_uhq.jpg'
 
-function App() {
+const  App=()=> {
+    console.log('App')
     let cardStudents = useSelector<AppRootStateType, CardStudentsType[]>(state => state.card)
     let dispatch = useDispatch()
-    const addCard = (name: string) => {
+    const addCard = useCallback((name: string) => {
         const action = addCardAC(name)
         dispatch(action)
-    }
+    },[dispatch]);
 
     const mapTodolist = cardStudents.map(el => {
         return <CardStudents
