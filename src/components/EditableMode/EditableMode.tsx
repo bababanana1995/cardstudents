@@ -8,6 +8,7 @@ type EditableModePropsType = {
     className:string
 }
 export const EditableMode = React.memo((props: EditableModePropsType) => {
+    console.log('EditableMode')
     const {text,onChange,className} = props
     const [editMode, setEditMode] = useState(false)
     const [textEdit, setTextEdit] = useState(text)

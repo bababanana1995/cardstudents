@@ -5,10 +5,10 @@ import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableMode} from "../EditableMode/EditableMode";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
-import {addCommentsAC, changeCommentsTextAC, commentChangeLikesAC, removeCommentsAC} from "../state/comments-reducer";
+import {addCommentsAC} from "../state/comments-reducer";
 import {changeCardTitleAC, removeCardAC} from "../state/card-reducer";
 import {Simulate} from "react-dom/test-utils";
-import compositionEnd = Simulate.compositionEnd;
+import {CommentComponent} from "./commentComponent";
 
 type PropsType = {
     cardId: string
@@ -29,13 +29,13 @@ export const CardStudents = React.memo((props: PropsType) => {
 
     const addComments = useCallback((comment: string) => {
         dispatch(addCommentsAC(cardId, comment))
-    }, [dispatch])
-    const changeCardTitle = (name: string) => {
+    }, [cardId])
+    const changeCardTitle = useCallback((name: string) => {
         dispatch(changeCardTitleAC(cardId, name))
-    }
-    const removeCard = () => {
+    },[cardId])
+    const removeCard = useCallback(() => {
         dispatch(removeCardAC(cardId))
-    }
+    },[cardId])
 
     const filteredComments = (likes: string) => {
         setLikes(likes)
@@ -48,24 +48,7 @@ export const CardStudents = React.memo((props: PropsType) => {
         allComments = comments.filter(el => el.likes === false)
     }
     const mapSms = allComments.map((el, key) => {
-            const changeComment = (comment: string) => {
-                dispatch(changeCommentsTextAC(cardId, el.id, comment))
-            }
-            const commentChangeLikes = (check: boolean) => {
-                dispatch(commentChangeLikesAC(el.id, check, cardId))
-            }
-            const removeComments = () => {
-                dispatch(removeCommentsAC(el.id, cardId))
-            }
-
-            return <div className={s.container_2} key={key}>
-                <input onChange={(e) => commentChangeLikes(e.currentTarget.checked)} checked={el.likes}
-                       type="checkbox"/>
-                <div>
-                    <button className={s.crossDellete} onClick={removeComments}>x</button>
-                </div>
-                <EditableMode className={s.sms} text={el.sms} onChange={changeComment}/>
-            </div>
+    return <CommentComponent cardId={cardId} commentId={el.id} key={key} likes={el.likes} sms={el.sms}/>
         }
     )
 
