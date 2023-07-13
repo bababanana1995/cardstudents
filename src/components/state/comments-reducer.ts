@@ -64,7 +64,7 @@ export type ChangeCommentsTextActionType = {
 export const removeCommentsAC = (comId: string, cardId: string):RemoveCommentsActionType => {
     return {type: 'REMOVE-COMMENTS', comId, cardId}
 }
-export const addCommentsAC = (smsText: string, cardId: string):AddCommentsActionType => {
+export const addCommentsAC = (cardId: string,smsText: string):AddCommentsActionType => {
     return {type: 'ADD-COMMENTS', smsText, cardId}
 }
 export const commentChangeLikesAC = (comId: string, check: boolean, cardId: string):CommentChangeLikesActionType => {

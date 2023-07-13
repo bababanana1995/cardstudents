@@ -1,73 +1,60 @@
-import React, {useState} from 'react';
+import React from 'react';
 import s from './CardStudents.module.css'
-import {CardStudentsType, CommentsStateType} from "../../App";
+import {CommentsType} from "../../App";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableMode} from "../EditableMode/EditableMode";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "../state/store";
+import {addCommentsAC, changeCommentsTextAC, commentChangeLikesAC, removeCommentsAC} from "../state/comments-reducer";
+import {changeCardTitleAC, removeCardAC} from "../state/card-reducer";
 
 type PropsType = {
-    cardStudents: CardStudentsType[]
-    comments: CommentsStateType
     cardId: string
     name: string
     avatar: string
-    removeComments: (comId: string, cardId: string) => void
-    addComments: (smsText: string, cardId: string) => void
-    commentChangeLikes:(comId:string,check:boolean,cardId:string)=>void
-    changeCardTitle:(cardId:string,nameStudents:string)=>void
-    removeCard:(cardId:string)=>void
-    changeCommentsText:(cardId:string,comId:string,text:string)=>void
 }
 
 export function CardStudents(props: PropsType) {
     const {
-        comments,
         cardId,
         name,
         avatar,
-        removeComments,
-        addComments,
-        commentChangeLikes,
-        changeCardTitle,
-        removeCard,
-        changeCommentsText
     } = props
-    // const [comment, setComment]=useState('')
+    let comments = useSelector<AppRootStateType, CommentsType[]>(state => state.comments[cardId])
+    let dispatch = useDispatch()
 
-    const addCommentsHandler=(comment:string)=>{
-        addComments(comment,cardId)
+    const addComments = (comment: string) => {
+        dispatch(addCommentsAC(cardId, comment))
     }
-
-
-    const changeCardTitleHandler=(name:string)=>{
-        changeCardTitle(cardId,name)
+    const changeCardTitle = (name: string) => {
+        dispatch(changeCardTitleAC(cardId, name))
     }
-    const removeCardHandler=()=>{
-        removeCard(cardId)
+    const removeCard = () => {
+        dispatch(removeCardAC(cardId))
     }
-    const mapSms = comments[cardId].map((el, key) => {
-        const changeCommentHandler=(comment:string)=>{
-            changeCommentsText(cardId,el.id,comment)
-        }
-        const commentChangeLikesHandler=(check:boolean)=>{
-            commentChangeLikes(el.id,check,cardId)
-        }
-        const removeCommentsHandler = () => {
-            removeComments(el.id, cardId)
-        }
-           return <div className={s.container_2} key={key}>
-                <input onChange={(e) => commentChangeLikesHandler(e.currentTarget.checked)} checked={el.likes}
+    const mapSms = comments.map((el, key) => {
+            const changeComment = (comment: string) => {
+                dispatch(changeCommentsTextAC(cardId, el.id, comment))
+            }
+            const commentChangeLikes = (check: boolean) => {
+                dispatch(commentChangeLikesAC(el.id, check, cardId))
+            }
+            const removeComments = () => {
+                dispatch(removeCommentsAC(el.id, cardId))
+            }
+            return <div className={s.container_2} key={key}>
+                <input onChange={(e) => commentChangeLikes(e.currentTarget.checked)} checked={el.likes}
                        type="checkbox"/>
                 <div>
-                    <button className={s.crossDellete} onClick={removeCommentsHandler}>x</button>
+                    <button className={s.crossDellete} onClick={removeComments}>x</button>
                 </div>
-                <EditableMode className={s.sms} text={el.sms} onChange={changeCommentHandler}/>
-                {/*<span className={s.sms}>{el.sms}</span>*/}
+                <EditableMode className={s.sms} text={el.sms} onChange={changeComment}/>
             </div>
         }
     )
     return (
         <div className={s.wrapp}>
-                        <button onClick={removeCardHandler}>x</button>
+            <button onClick={removeCard}>x</button>
             <div className={s.wrapp_size}>
                 <div className={s.container_1}>
                     <div>
@@ -75,10 +62,10 @@ export function CardStudents(props: PropsType) {
                     </div>
                     <div>
                         <h2>
-                            <EditableMode text={name} onChange={changeCardTitleHandler} className=''/>
+                            <EditableMode text={name} onChange={changeCardTitle} className=''/>
                         </h2>
                         <div>
-                            <AddItemForm addText={addCommentsHandler} name={'add'} textPlaceholder={'Write your message'}/>
+                            <AddItemForm addText={addComments} name={'add'} textPlaceholder={'Write your message'}/>
                         </div>
                     </div>
                 </div>
