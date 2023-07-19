@@ -10,14 +10,7 @@ export type CommentsReducerActionType = RemoveCommentsActionType |
     RemoveCardActionType |
     ChangeCommentsTextActionType
 
-let initialState: CommentsStateType = {
-    ['123']:[
-        {id: v1(), sms: 'hello', likes: false},
-        {id: v1(), sms: 'hello', likes: true},
-        {id: v1(), sms: 'hello', likes: false},
-        {id: v1(), sms: 'hello', likes: true},
-    ],
-}
+let initialState: CommentsStateType = {}
 export const commentsReducer = (state = initialState, action: CommentsReducerActionType): CommentsStateType => {
     switch (action.type) {
         case "REMOVE-COMMENTS":{

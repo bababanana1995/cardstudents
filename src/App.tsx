@@ -5,6 +5,7 @@ import {AddItemForm} from "./components/AddItemForm/AddItemForm";
 import {addCardAC} from './components/state/card-reducer';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./components/state/store";
+import avatarka from './components/3-2e7445062f6dbcbde00cb3deee691548.jpg'
 
 
 export type CardStudentsType = {
@@ -20,10 +21,9 @@ export type CommentsType = {
 export type CommentsStateType = {
     [key: string]: CommentsType[]
 }
-export let avatar1 = 'https://pm1.aminoapps.com/6889/74979d4d2744ec6e27995b6e866f091d04c0b40cr1-515-414v2_uhq.jpg'
+export let avatar1 = avatarka
 
 const  App=()=> {
-    console.log('App')
     let cardStudents = useSelector<AppRootStateType, CardStudentsType[]>(state => state.card)
     let dispatch = useDispatch()
     const addCard = useCallback((name: string) => {

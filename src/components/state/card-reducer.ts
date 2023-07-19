@@ -1,12 +1,9 @@
 import { v1 } from "uuid"
 import {avatar1, CardStudentsType} from "../../App"
 
-
 export type ActionCardType = RemoveCardActionType|AddCardActionType|ChangeCardTitleActionType
 
-let initialState: CardStudentsType[] = [
-    {id: '123', avatar: 'hello', name: 'Danil'},
-]
+let initialState: CardStudentsType[] = []
 export const cardReducer = (state = initialState, action: ActionCardType): CardStudentsType[] => {
     switch (action.type) {
         case "REMOVE-CARD": {
